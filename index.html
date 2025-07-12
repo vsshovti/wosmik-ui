@@ -2,73 +2,123 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>WOSMIK AI Analyzer</title>
+  <title>Get Insight</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f8fb;
-      padding: 30px;
-      max-width: 800px;
-      margin: auto;
-      text-align: center;
+      font-family: Arial, sans-serif;
+      background-color: #f7fbfe;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .logo {
+      display: block;
+      margin: 30px auto 10px;
+      max-width: 100px;
     }
     h1 {
-      color: #2b2d42;
-      font-size: 2em;
-      margin-bottom: 10px;
+      text-align: center;
+      color: #1e2b4a;
     }
-    img.octopus {
-      width: 100px;
-      margin-bottom: 20px;
-    }
-    input, textarea {
+    input {
       width: 100%;
+      padding: 10px;
       margin: 8px 0;
-      padding: 12px;
-      font-size: 14px;
-      border: 1px solid #ccc;
       border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
     }
     button {
-      background-color: #2b2d42;
+      width: 100%;
+      padding: 12px;
+      background-color: #1e2b4a;
       color: white;
-      padding: 12px 20px;
       font-size: 16px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      margin-top: 10px;
     }
     button:hover {
-      background-color: #1f2230;
+      background-color: #2a3c5a;
     }
-    h2 {
-      text-align: left;
+    #result {
       margin-top: 20px;
-      font-size: 18px;
-      color: #333;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      background-color: #f0f0f0;
+      min-height: 60px;
+    }
+    .disclaimer {
+      font-size: 12px;
+      color: #888;
+      text-align: center;
+      margin-top: 50px;
+      padding-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Octopus_icon.svg" alt="Octopus" class="octopus">
-  <h1>WOSMIK AI Analyzer</h1>
+  <div class="container">
+    <img src="octopus.png" alt="Octopus" class="logo">
+    <h1>Get Insight</h1>
+    <input placeholder="First Name" id="firstName">
+    <input placeholder="Last Name" id="lastName">
+    <input placeholder="Email" id="email">
+    <input placeholder="Company" id="company">
+    <input placeholder="City" id="city">
+    <input placeholder="Country" id="country">
+    <input placeholder="Phone" id="phone">
+    <input placeholder="Instagram" id="instagram">
+    <input placeholder="Facebook" id="facebook">
+    <input placeholder="LinkedIn" id="linkedin">
+    <input placeholder="Website" id="website">
+    <button onclick="analyze()">Analyze</button>
+    <div id="result"></div>
+  </div>
 
-  <input placeholder="First Name">
-  <input placeholder="Last Name">
-  <input placeholder="Email">
-  <input placeholder="Company">
-  <input placeholder="City">
-  <input placeholder="Country">
-  <input placeholder="Phone">
-  <input placeholder="Instagram">
-  <input placeholder="Facebook">
-  <input placeholder="LinkedIn">
-  <input placeholder="Website">
+  <p class="disclaimer">
+    We do not violate any platform rules. All analysis is based on publicly available data and used responsibly.
+  </p>
 
-  <button>Analyze</button>
+  <script>
+    async function analyze() {
+      const data = {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        email: document.getElementById("email").value,
+        company: document.getElementById("company").value,
+        city: document.getElementById("city").value,
+        country: document.getElementById("country").value,
+        phone: document.getElementById("phone").value,
+        instagram: document.getElementById("instagram").value,
+        facebook: document.getElementById("facebook").value,
+        linkedin: document.getElementById("linkedin").value,
+        website: document.getElementById("website").value
+      };
 
-  <h2>Result:</h2>
-  <textarea rows="10"></textarea>
+      document.getElementById("result").innerText = "Analyzing...";
+
+      try {
+        const response = await fetch("https://wosmik.onrender.com/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        document.getElementById("result").innerText = result.analysis || "No result.";
+      } catch (error) {
+        document.getElementById("result").innerText = "Error: " + error.message;
+      }
+    }
+  </script>
 </body>
 </html>
