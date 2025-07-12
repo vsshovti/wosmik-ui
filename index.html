@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WOSMIK Analyzer</title>
+  <style>
+    body { font-family: sans-serif; padding: 30px; max-width: 800px; margin: auto; }
+    input, textarea { width: 100%; margin: 10px 0; padding: 10px; }
+    button { padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>WOSMIK AI Анализ</h1>
+
+  <form id="analyzeForm">
+    <input name="firstname" placeholder="Имя" required />
+    <input name="lastname" placeholder="Фамилия" required />
+    <input name="email" placeholder="Email" />
+    <input name="company" placeholder="Компания" />
+    <input name="city" placeholder="Город" />
+    <input name="country" placeholder="Страна" />
+    <input name="phone" placeholder="Телефон" />
+    <input name="instagram" placeholder="Instagram" />
+    <input name="facebook" placeholder="Facebook" />
+    <input name="linkedin" placeholder="LinkedIn" />
+    <input name="website" placeholder="Сайт" />
+    <button type="submit">Анализировать</button>
+  </form>
+
+  <h2>Результат:</h2>
+  <textarea id="result" readonly rows="10"></textarea>
+
+  <script>
+    document.getElementById("analyzeForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      const response = await fetch("https://wosmik.onrender.com/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const json = await response.json();
+      document.getElementById("result").value = json.result || "Ошибка";
+    });
+  </script>
+</body>
+</html>
