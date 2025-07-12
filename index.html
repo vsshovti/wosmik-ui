@@ -1,50 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>WOSMIK Analyzer</title>
+  <meta charset="UTF-8">
+  <title>WOSMIK AI Analyzer</title>
   <style>
-    body { font-family: sans-serif; padding: 30px; max-width: 800px; margin: auto; }
-    input, textarea { width: 100%; margin: 10px 0; padding: 10px; }
-    button { padding: 10px 20px; font-size: 16px; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f8fb;
+      padding: 30px;
+      max-width: 800px;
+      margin: auto;
+      text-align: center;
+    }
+    h1 {
+      color: #2b2d42;
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    img.octopus {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+    input, textarea {
+      width: 100%;
+      margin: 8px 0;
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #2b2d42;
+      color: white;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #1f2230;
+    }
+    h2 {
+      text-align: left;
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
   </style>
 </head>
 <body>
-  <h1>WOSMIK AI Анализ</h1>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Octopus_icon.svg" alt="Octopus" class="octopus">
+  <h1>WOSMIK AI Analyzer</h1>
 
-  <form id="analyzeForm">
-    <input name="firstname" placeholder="Имя" required />
-    <input name="lastname" placeholder="Фамилия" required />
-    <input name="email" placeholder="Email" />
-    <input name="company" placeholder="Компания" />
-    <input name="city" placeholder="Город" />
-    <input name="country" placeholder="Страна" />
-    <input name="phone" placeholder="Телефон" />
-    <input name="instagram" placeholder="Instagram" />
-    <input name="facebook" placeholder="Facebook" />
-    <input name="linkedin" placeholder="LinkedIn" />
-    <input name="website" placeholder="Сайт" />
-    <button type="submit">Анализировать</button>
-  </form>
+  <input placeholder="First Name">
+  <input placeholder="Last Name">
+  <input placeholder="Email">
+  <input placeholder="Company">
+  <input placeholder="City">
+  <input placeholder="Country">
+  <input placeholder="Phone">
+  <input placeholder="Instagram">
+  <input placeholder="Facebook">
+  <input placeholder="LinkedIn">
+  <input placeholder="Website">
 
-  <h2>Результат:</h2>
-  <textarea id="result" readonly rows="10"></textarea>
+  <button>Analyze</button>
 
-  <script>
-    document.getElementById("analyzeForm").addEventListener("submit", async function (e) {
-      e.preventDefault();
-      const form = e.target;
-      const data = Object.fromEntries(new FormData(form).entries());
-
-      const response = await fetch("https://wosmik.onrender.com/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-
-      const json = await response.json();
-      document.getElementById("result").value = json.result || "Ошибка";
-    });
-  </script>
+  <h2>Result:</h2>
+  <textarea rows="10"></textarea>
 </body>
 </html>
