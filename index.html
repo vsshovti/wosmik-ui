@@ -11,13 +11,10 @@
       padding: 0;
     }
 
-    .container {
+    .wrapper {
       max-width: 600px;
       margin: 40px auto;
-      padding: 20px;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
     }
 
     .logo {
@@ -25,6 +22,13 @@
       height: auto;
       display: block;
       margin: 0 auto 20px auto;
+    }
+
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     input {
@@ -94,21 +98,23 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="wrapper">
     <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWFudXBxeGl0c3NodGxuZ2J4MzFseHU4YjY0Y2dqc29vdnFwbW1ncSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/IsHQp1UjCOJKYtgZO9/giphy.gif" alt="Octopus" class="logo">
-
-    <input placeholder="First Name" id="firstName">
-    <input placeholder="Last Name" id="lastName">
-    <input placeholder="Email" id="email">
-    <input placeholder="Company" id="company">
-    <input placeholder="City" id="city">
-    <input placeholder="Country" id="country">
-    <input placeholder="Phone" id="phone">
-    <input placeholder="Instagram" id="instagram">
-    <input placeholder="Facebook" id="facebook">
-    <input placeholder="LinkedIn" id="linkedin">
-    <input placeholder="Website" id="website">
-    <button onclick="analyze()">Get Insight</button>
+    
+    <div class="container">
+      <input placeholder="First Name" id="firstName">
+      <input placeholder="Last Name" id="lastName">
+      <input placeholder="Email" id="email">
+      <input placeholder="Company" id="company">
+      <input placeholder="City" id="city">
+      <input placeholder="Country" id="country">
+      <input placeholder="Phone" id="phone">
+      <input placeholder="Instagram" id="instagram">
+      <input placeholder="Facebook" id="facebook">
+      <input placeholder="LinkedIn" id="linkedin">
+      <input placeholder="Website" id="website">
+      <button onclick="analyze()">Get Insight</button>
+    </div>
   </div>
 
   <p class="disclaimer">
