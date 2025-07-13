@@ -84,6 +84,7 @@
 
     #overlay-content {
       white-space: pre-wrap;
+      text-align: left;
     }
 
     #overlay button {
@@ -95,6 +96,11 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+    }
+
+    a {
+      color: #9ed7ff;
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -154,7 +160,15 @@
         });
 
         const result = await response.json();
-        document.getElementById("overlay-content").innerText = result.result || "No result.";
+        const overlay = document.getElementById("overlay-content");
+
+        try {
+          const parsed = typeof result.result === 'string' ? JSON.parse(result.result) : result.result;
+          overlay.innerHTML = '';
+          renderJson(parsed, overlay);
+        } catch (e) {
+          overlay.innerText = result.result || "No result.";
+        }
       } catch (error) {
         document.getElementById("overlay-content").innerText = "Error: " + error.message;
       }
@@ -162,6 +176,44 @@
 
     function closeOverlay() {
       document.getElementById("overlay").style.display = "none";
+    }
+
+    function renderJson(json, container, level = 0) {
+      const indent = '&nbsp;'.repeat(level * 4);
+
+      for (const key in json) {
+        const value = json[key];
+        const formattedKey = formatKey(key);
+
+        if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+          container.innerHTML += `<div style="margin-top: 10px; font-weight: bold;">${indent}${formattedKey}</div>`;
+          renderJson(value, container, level + 1);
+        } else if (Array.isArray(value)) {
+          container.innerHTML += `<div style="margin-top: 10px; font-weight: bold;">${indent}${formattedKey}</div>`;
+          value.forEach((item) => {
+            if (typeof item === "object") {
+              renderJson(item, container, level + 1);
+            } else {
+              container.innerHTML += `<div>${indent}- ${formatValue(item)}</div>`;
+            }
+          });
+        } else {
+          container.innerHTML += `<div>${indent}<strong>${formattedKey}:</strong> ${formatValue(value)}</div>`;
+        }
+      }
+    }
+
+    function formatKey(key) {
+      return key.replace(/[_\-]/g, " ")
+                .replace(/([a-z])([A-Z])/g, "$1 $2")
+                .replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    function formatValue(value) {
+      if (typeof value === "string" && value.startsWith("http")) {
+        return `<a href="${value}" target="_blank">${value}</a>`;
+      }
+      return value ?? "—";
     }
   </script>
 </body>
