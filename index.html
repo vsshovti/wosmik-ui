@@ -27,11 +27,6 @@
       margin: 0 auto 20px auto;
     }
 
-    h1 {
-      text-align: center;
-      color: #1e2b4a;
-    }
-
     input {
       width: 100%;
       padding: 10px;
@@ -44,7 +39,7 @@
     button {
       width: 100%;
       padding: 12px;
-      background-color: #1e2b4a;
+      background-color: #9E3CEF;
       color: white;
       font-size: 16px;
       border: none;
@@ -53,7 +48,7 @@
     }
 
     button:hover {
-      background-color: #2a3c5a;
+      background-color: #7e2fc2;
     }
 
     .disclaimer {
@@ -67,17 +62,19 @@
     #overlay {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -20%);
+      width: 60%;
+      max-height: 70%;
       background: rgba(30, 43, 74, 0.95);
       color: white;
-      font-size: 18px;
-      padding: 40px;
+      font-size: 16px;
+      padding: 30px;
       box-sizing: border-box;
       overflow-y: auto;
       z-index: 9999;
+      border-radius: 12px;
     }
 
     #overlay-content {
@@ -85,7 +82,7 @@
     }
 
     #overlay button {
-      margin-top: 30px;
+      margin-top: 20px;
       padding: 10px 20px;
       font-size: 16px;
       background: white;
@@ -99,7 +96,7 @@
 <body>
   <div class="container">
     <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWFudXBxeGl0c3NodGxuZ2J4MzFseHU4YjY0Y2dqc29vdnFwbW1ncSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/IsHQp1UjCOJKYtgZO9/giphy.gif" alt="Octopus" class="logo">
-    <h1>Get Insight</h1>
+
     <input placeholder="First Name" id="firstName">
     <input placeholder="Last Name" id="lastName">
     <input placeholder="Email" id="email">
@@ -111,7 +108,7 @@
     <input placeholder="Facebook" id="facebook">
     <input placeholder="LinkedIn" id="linkedin">
     <input placeholder="Website" id="website">
-    <button onclick="analyze()">Analyze</button>
+    <button onclick="analyze()">Get Insight</button>
   </div>
 
   <p class="disclaimer">
@@ -126,8 +123,8 @@
   <script>
     async function analyze() {
       const data = {
-        firstName: document.getElementById("firstName").value,
-        lastName: document.getElementById("lastName").value,
+        firstname: document.getElementById("firstName").value,
+        lastname: document.getElementById("lastName").value,
         email: document.getElementById("email").value,
         company: document.getElementById("company").value,
         city: document.getElementById("city").value,
