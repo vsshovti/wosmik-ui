@@ -103,6 +103,7 @@
 
     #overlay-content {
       white-space: pre-wrap;
+      text-align: left;
     }
 
     #overlay button {
@@ -171,7 +172,6 @@
       const overlayContent = document.getElementById("overlay-content");
       overlayContent.style.maxWidth = '600px';
       overlayContent.style.margin = '20px auto';
-      overlayContent.style.textAlign = 'center';
       overlayContent.style.backgroundColor = 'rgba(255,255,255,0.1)';
       overlayContent.style.border = '1px solid rgba(255,255,255,0.2)';
       overlayContent.style.padding = '14px';
@@ -247,7 +247,8 @@
       container.style.borderRadius = '10px';
       container.style.padding = '20px';
       container.style.maxWidth = '960px';
-      container.style.margin = '30px 0 30px 40px';
+      container.style.margin = '30px auto';
+      container.style.textAlign = 'left';
 
       for (const key in json) {
         const value = json[key];
