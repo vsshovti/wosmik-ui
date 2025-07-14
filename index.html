@@ -249,26 +249,30 @@
     }
 
     function renderJson(json, container, level = 0) {
-      for (const key in json) {
-        const value = json[key];
-        const formattedKey = formatKey(key);
-        container.innerHTML += `<strong>${formattedKey}</strong>`;
-        container.innerHTML += `<div>${formatValue(value)}</div>`;
-      }
-    }
+  for (const key in json) {
+    const value = json[key];
+    const formattedKey = formatKey(key);
 
-    function formatKey(key) {
-      return key.replace(/[_\-]/g, " ")
-                .replace(/([a-z])([A-Z])/g, "$1 $2")
-                .replace(/\b\w/g, l => l.toUpperCase());
-    }
+    container.innerHTML += `<strong>${formattedKey}</strong>`;
 
-    function formatValue(value) {
-      if (typeof value === "string" && value.startsWith("http")) {
-        return `<a href="${value}" target="_blank">${value}</a>`;
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      container.innerHTML += '<div style="margin-bottom: 10px">';
+      for (const subKey in value) {
+        const subVal = value[subKey];
+        container.innerHTML += `<div><strong>${formatKey(subKey)}:</strong> ${formatValue(subVal)}</div>`;
       }
-      return value ?? "—";
+      container.innerHTML += '</div>';
+    } else if (Array.isArray(value)) {
+      container.innerHTML += '<ul>';
+      value.forEach(item => {
+        container.innerHTML += `<li>${formatValue(item)}</li>`;
+      });
+      container.innerHTML += '</ul>';
+    } else {
+      container.innerHTML += `<div style="margin-bottom: 20px">${formatValue(value)}</div>`;
     }
+  }
+}
   </script>
 </body>
 </html>
