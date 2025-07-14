@@ -247,7 +247,7 @@
       container.style.borderRadius = '10px';
       container.style.padding = '20px';
       container.style.maxWidth = '960px';
-      container.style.margin = '30px auto';
+      container.style.margin = '30px 0 30px 40px';
 
       for (const key in json) {
         const value = json[key];
@@ -275,9 +275,9 @@
     }
 
     function formatKey(key) {
-      return key.replace(/[_\\-]/g, " ")
+      return key.replace(/[_\-]/g, " ")
                 .replace(/([a-z])([A-Z])/g, "$1 $2")
-                .replace(/\\b\\w/g, l => l.toUpperCase());
+                .replace(/\b\w/g, l => l.toUpperCase());
     }
 
     function formatValue(value) {
