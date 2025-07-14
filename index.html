@@ -247,13 +247,18 @@
       stopPhraseCycle();
       document.getElementById("overlay").style.display = "none";
     }
+function renderJson(json, container, level = 0) {
+  container.style.backgroundColor = '#ffffff';
+  container.style.color = '#1e2b4a';
+  container.style.border = '1px solid #ccc';
+  container.style.borderRadius = '10px';
+  container.style.padding = '20px';
 
-    function renderJson(json, container, level = 0) {
   for (const key in json) {
     const value = json[key];
     const formattedKey = formatKey(key);
 
-    container.innerHTML += `<strong>${formattedKey}</strong>`;
+    container.innerHTML += `<strong style="display:block; margin-top: 20px; font-size: 18px;">${formattedKey}</strong>`;
 
     if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
       container.innerHTML += '<div style="margin-bottom: 10px">';
