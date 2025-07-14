@@ -102,24 +102,7 @@
     }
 
     #overlay-content {
-      background-color: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 10px;
-      padding: 20px;
-      margin-top: 20px;
-      text-align: left;
       white-space: pre-wrap;
-      line-height: 1.6;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    #overlay-content strong {
-      display: block;
-      margin-top: 20px;
-      font-size: 18px;
-      color: #fff;
     }
 
     #overlay button {
@@ -156,9 +139,7 @@
       <input placeholder="LinkedIn" id="linkedin">
       <input placeholder="Website" id="website">
       <button onclick="analyze()">Get Insight</button>
-      <p class="form-note">
-        🧐 Fill in as many fields as possible — it helps us generate better insights.
-      </p>
+      <p class="form-note">🧐 Fill in as many fields as possible — it helps us generate better insights.</p>
     </div>
   </div>
 
@@ -168,7 +149,7 @@
 
   <div id="overlay">
     <img id="spinner" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWFudXBxeGl0c3NodGxuZ2J4MzFseHU4YjY0Y2dqc29vdnFwbW1ncSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/IsHQp1UjCOJKYtgZO9/giphy.gif" alt="Octopus loading">
-    <div id="overlay-content">Analyzing...</div>
+    <div id="overlay-content"></div>
     <button onclick="closeOverlay()">Close</button>
   </div>
 
@@ -187,12 +168,22 @@
     let phraseInterval;
 
     function startPhraseCycle() {
+      const overlayContent = document.getElementById("overlay-content");
+      overlayContent.style.maxWidth = '600px';
+      overlayContent.style.margin = '20px auto';
+      overlayContent.style.textAlign = 'center';
+      overlayContent.style.backgroundColor = 'rgba(255,255,255,0.1)';
+      overlayContent.style.border = '1px solid rgba(255,255,255,0.2)';
+      overlayContent.style.padding = '14px';
+      overlayContent.style.borderRadius = '10px';
+      overlayContent.style.fontStyle = 'italic';
+
       phraseIndex = 0;
-      document.getElementById("overlay-content").innerText = loadingPhrases[phraseIndex];
+      overlayContent.innerText = loadingPhrases[phraseIndex];
       phraseInterval = setInterval(() => {
         phraseIndex = (phraseIndex + 1) % loadingPhrases.length;
-        document.getElementById("overlay-content").innerText = loadingPhrases[phraseIndex];
-      }, 2000);
+        overlayContent.innerText = loadingPhrases[phraseIndex];
+      }, 4000);
     }
 
     function stopPhraseCycle() {
@@ -218,6 +209,7 @@
       const overlayContent = document.getElementById("overlay-content");
 
       overlay.style.display = "block";
+      overlayContent.innerHTML = "";
       startPhraseCycle();
 
       try {
@@ -247,37 +239,53 @@
       stopPhraseCycle();
       document.getElementById("overlay").style.display = "none";
     }
-function renderJson(json, container, level = 0) {
-  container.style.backgroundColor = '#ffffff';
-  container.style.color = '#1e2b4a';
-  container.style.border = '1px solid #ccc';
-  container.style.borderRadius = '10px';
-  container.style.padding = '20px';
 
-  for (const key in json) {
-    const value = json[key];
-    const formattedKey = formatKey(key);
+    function renderJson(json, container, level = 0) {
+      container.style.backgroundColor = '#ffffff';
+      container.style.color = '#1e2b4a';
+      container.style.border = '1px solid #ccc';
+      container.style.borderRadius = '10px';
+      container.style.padding = '20px';
+      container.style.maxWidth = '960px';
+      container.style.margin = '30px auto';
 
-    container.innerHTML += `<strong style="display:block; margin-top: 20px; font-size: 18px;">${formattedKey}</strong>`;
+      for (const key in json) {
+        const value = json[key];
+        const formattedKey = formatKey(key);
 
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      container.innerHTML += '<div style="margin-bottom: 10px">';
-      for (const subKey in value) {
-        const subVal = value[subKey];
-        container.innerHTML += `<div><strong>${formatKey(subKey)}:</strong> ${formatValue(subVal)}</div>`;
+        container.innerHTML += `<strong style="display:block; margin-top: 20px; font-size: 18px;">${formattedKey}</strong>`;
+
+        if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+          container.innerHTML += '<div style="margin-bottom: 10px">';
+          for (const subKey in value) {
+            const subVal = value[subKey];
+            container.innerHTML += `<div><strong>${formatKey(subKey)}:</strong> ${formatValue(subVal)}</div>`;
+          }
+          container.innerHTML += '</div>';
+        } else if (Array.isArray(value)) {
+          container.innerHTML += '<ul>';
+          value.forEach(item => {
+            container.innerHTML += `<li>${formatValue(item)}</li>`;
+          });
+          container.innerHTML += '</ul>';
+        } else {
+          container.innerHTML += `<div style="margin-bottom: 20px">${formatValue(value)}</div>`;
+        }
       }
-      container.innerHTML += '</div>';
-    } else if (Array.isArray(value)) {
-      container.innerHTML += '<ul>';
-      value.forEach(item => {
-        container.innerHTML += `<li>${formatValue(item)}</li>`;
-      });
-      container.innerHTML += '</ul>';
-    } else {
-      container.innerHTML += `<div style="margin-bottom: 20px">${formatValue(value)}</div>`;
     }
-  }
-}
+
+    function formatKey(key) {
+      return key.replace(/[_\\-]/g, " ")
+                .replace(/([a-z])([A-Z])/g, "$1 $2")
+                .replace(/\\b\\w/g, l => l.toUpperCase());
+    }
+
+    function formatValue(value) {
+      if (typeof value === "string" && value.startsWith("http")) {
+        return `<a href="${value}" target="_blank">${value}</a>`;
+      }
+      return value ?? "—";
+    }
   </script>
 </body>
 </html>
