@@ -119,8 +119,8 @@
     }
 
     a {
-      color: var(--main-color);
-      text-decoration: none;
+      color: #9ed7ff;
+      text-decoration: underline;
     }
 
     .photo-preview {
@@ -129,23 +129,33 @@
       margin-bottom: 20px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
-
-    .social-icons {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
-      margin-bottom: 30px;
-    }
-
-    .social-icons img {
-      width: 32px;
-      height: 32px;
-    }
   </style>
 </head>
 <body>
-  <!-- Твоя разметка формы остаётся без изменений -->
-  <!-- Код ниже отрисует результат -->
+  <div class="wrapper">
+    <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWFudXBxeGl0c3NodGxuZ2J4MzFseHU4YjY0Y2dqc29vdnFwbW1ncSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/IsHQp1UjCOJKYtgZO9/giphy.gif" alt="Octopus" class="logo">
+    <div class="container">
+      <input placeholder="First Name" id="firstName">
+      <input placeholder="Last Name" id="lastName">
+      <input placeholder="Email" id="email">
+      <input placeholder="Company" id="company">
+      <input placeholder="City" id="city">
+      <input placeholder="Country" id="country">
+      <input placeholder="Phone" id="phone">
+      <input placeholder="Instagram" id="instagram">
+      <input placeholder="Facebook" id="facebook">
+      <input placeholder="LinkedIn" id="linkedin">
+      <input placeholder="Website" id="website">
+      <input placeholder="Special Key (e.g. NMLS 123456 or Actor)" id="specialKey">
+      <button onclick="analyze()">Get Insight</button>
+      <p class="form-note">🧐 Fill in as many fields as possible — it helps us generate better insights.</p>
+    </div>
+  </div>
+
+  <p class="disclaimer">
+    We do not violate any platform rules. All analysis is based on publicly available data and used responsibly.
+  </p>
+
   <div id="overlay">
     <img id="spinner" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWFudXBxeGl0c3NodGxuZ2J4MzFseHU4YjY0Y2dqc29vdnFwbW1ncSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/IsHQp1UjCOJKYtgZO9/giphy.gif" alt="Octopus loading">
     <div id="overlay-content"></div>
@@ -153,38 +163,123 @@
   </div>
 
   <script>
-    function renderJson(json, container) {
-      container.innerHTML = '';
+    const loadingPhrases = [
+      "Diving into the internet abyss...",
+      "Knocking on Google's door...",
+      "Checking under the digital couch...",
+      "Asking the octopus what it thinks...",
+      "Consulting ancient internet scrolls...",
+      "Whispering to the algorithm...",
+      "Googling harder than ever before..."
+    ];
 
+    let phraseIndex = 0;
+    let phraseInterval;
+
+    function startPhraseCycle() {
+      const overlayContent = document.getElementById("overlay-content");
+      overlayContent.style.maxWidth = '600px';
+      overlayContent.style.margin = '20px auto';
+      overlayContent.style.backgroundColor = 'rgba(255,255,255,0.1)';
+      overlayContent.style.border = '1px solid rgba(255,255,255,0.2)';
+      overlayContent.style.padding = '14px';
+      overlayContent.style.borderRadius = '10px';
+      overlayContent.style.fontStyle = 'italic';
+
+      phraseIndex = 0;
+      overlayContent.innerText = loadingPhrases[phraseIndex];
+      phraseInterval = setInterval(() => {
+        phraseIndex = (phraseIndex + 1) % loadingPhrases.length;
+        overlayContent.innerText = loadingPhrases[phraseIndex];
+      }, 4000);
+    }
+
+    function stopPhraseCycle() {
+      clearInterval(phraseInterval);
+    }
+
+    async function analyze() {
+      const data = {
+        firstname: document.getElementById("firstName").value,
+        lastname: document.getElementById("lastName").value,
+        email: document.getElementById("email").value,
+        company: document.getElementById("company").value,
+        city: document.getElementById("city").value,
+        country: document.getElementById("country").value,
+        phone: document.getElementById("phone").value,
+        instagram: document.getElementById("instagram").value,
+        facebook: document.getElementById("facebook").value,
+        linkedin: document.getElementById("linkedin").value,
+        website: document.getElementById("website").value,
+        special_key: document.getElementById("specialKey").value
+      };
+
+      const overlay = document.getElementById("overlay");
+      const overlayContent = document.getElementById("overlay-content");
+
+      overlay.style.display = "block";
+      overlayContent.innerHTML = "";
+      startPhraseCycle();
+
+      try {
+        const response = await fetch("https://wosmik.onrender.com/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        stopPhraseCycle();
+
+        try {
+          const parsed = typeof result.result === 'string' ? JSON.parse(result.result) : result.result;
+          overlayContent.innerHTML = '';
+          renderJson(parsed, overlayContent);
+        } catch (e) {
+          overlayContent.innerText = result.result || "No result.";
+        }
+      } catch (error) {
+        stopPhraseCycle();
+        overlayContent.innerText = "Error: " + error.message;
+      }
+    }
+
+    function closeOverlay() {
+      stopPhraseCycle();
+      document.getElementById("overlay").style.display = "none";
+    }
+
+    function renderJson(json, container, level = 0) {
+      container.style.backgroundColor = '#ffffff';
+      container.style.color = '#1e2b4a';
+      container.style.border = '1px solid #ccc';
+      container.style.borderRadius = '10px';
+      container.style.padding = '20px';
+      container.style.maxWidth = '960px';
+      container.style.margin = '30px auto';
+      container.style.textAlign = 'left';
+
+      // Если есть фото — выводим первым
       if (json.photo && json.photo.startsWith("http")) {
         container.innerHTML += `<img src="${json.photo}" class="photo-preview" alt="Profile photo">`;
       }
 
-      // Отображаем соц. иконки, если есть ссылки
-      const socials = [];
-      if (json.social_profiles?.LinkedIn) socials.push(`<a href="${json.social_profiles.LinkedIn}" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Linkedin_icon.svg/640px-Linkedin_icon.svg.png" alt="LinkedIn"></a>`);
-      if (json.social_profiles?.Facebook) socials.push(`<a href="${json.social_profiles.Facebook}" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Logo_de_Facebook.png/640px-Logo_de_Facebook.png" alt="Facebook"></a>`);
-      if (json.social_profiles?.Instagram) socials.push(`<a href="${json.social_profiles.Instagram}" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram"></a>`);
-
-      if (socials.length > 0) {
-        container.innerHTML += `<div class="social-icons">${socials.join('')}</div>`;
-      }
-
       for (const key in json) {
-        if (key === 'photo' || key === 'social_profiles') continue;
+        if (key === 'photo') continue; // уже показали
         const value = json[key];
         const formattedKey = formatKey(key);
-        container.innerHTML += `<strong style="display:block; margin-top: 20px; font-size: 18px; color: var(--main-color);">${formattedKey}</strong>`;
+
+        container.innerHTML += `<strong style="display:block; margin-top: 20px; font-size: 18px;">${formattedKey}</strong>`;
 
         if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-          container.innerHTML += '<div style="margin-bottom: 20px">';
+          container.innerHTML += '<div style="margin-bottom: 10px">';
           for (const subKey in value) {
             const subVal = value[subKey];
             container.innerHTML += `<div><strong>${formatKey(subKey)}:</strong> ${formatValue(subVal)}</div>`;
           }
           container.innerHTML += '</div>';
         } else if (Array.isArray(value)) {
-          container.innerHTML += '<ul style="margin-bottom: 20px">';
+          container.innerHTML += '<ul>';
           value.forEach(item => {
             container.innerHTML += `<li>${formatValue(item)}</li>`;
           });
