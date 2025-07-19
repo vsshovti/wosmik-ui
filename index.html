@@ -151,6 +151,10 @@
   </div>
 
   <script>
+    function closeOverlay() {
+      document.getElementById("overlay").style.display = "none";
+    }
+
     function renderJson(json, container) {
       container.innerHTML = '';
 
