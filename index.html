@@ -122,6 +122,13 @@
       color: #9ed7ff;
       text-decoration: underline;
     }
+
+    .photo-preview {
+      max-width: 180px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
   </style>
 </head>
 <body>
@@ -139,6 +146,7 @@
       <input placeholder="Facebook" id="facebook">
       <input placeholder="LinkedIn" id="linkedin">
       <input placeholder="Website" id="website">
+      <input placeholder="Special Key (e.g. NMLS 123456 or Actor)" id="specialKey">
       <button onclick="analyze()">Get Insight</button>
       <p class="form-note">🧐 Fill in as many fields as possible — it helps us generate better insights.</p>
     </div>
@@ -202,7 +210,8 @@
         instagram: document.getElementById("instagram").value,
         facebook: document.getElementById("facebook").value,
         linkedin: document.getElementById("linkedin").value,
-        website: document.getElementById("website").value
+        website: document.getElementById("website").value,
+        special_key: document.getElementById("specialKey").value
       };
 
       const overlay = document.getElementById("overlay");
@@ -250,7 +259,13 @@
       container.style.margin = '30px auto';
       container.style.textAlign = 'left';
 
+      // Если есть фото — выводим первым
+      if (json.photo && json.photo.startsWith("http")) {
+        container.innerHTML += `<img src="${json.photo}" class="photo-preview" alt="Profile photo">`;
+      }
+
       for (const key in json) {
+        if (key === 'photo') continue; // уже показали
         const value = json[key];
         const formattedKey = formatKey(key);
 
